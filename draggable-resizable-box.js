@@ -12,6 +12,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 var _react = require('react');
 
+var _reactDOM = require('react-dom');
+
 var _react2 = _interopRequireDefault(_react);
 
 exports['default'] = _react2['default'].createClass({
@@ -51,9 +53,9 @@ exports['default'] = _react2['default'].createClass({
     var centerYOffset = (this.props.height - height) / 2;
     var centerXOffset = (this.props.width - width) / 2;
     return {
-      top: centerYOffset,
+      top: 0,
       left: centerXOffset,
-      bottom: centerYOffset,
+      bottom: (this.props.height - height),
       right: centerXOffset,
       width: width,
       height: height
@@ -224,14 +226,14 @@ exports['default'] = _react2['default'].createClass({
   },
 
   onResize: function onResize(event) {
-    var box = _react2['default'].findDOMNode(this).parentElement.parentElement.getBoundingClientRect();
+    var box = _reactDOM.findDOMNode(this).parentElement.parentElement.getBoundingClientRect();
     var coordinates = this.getClientCoordinates(event);
     var position = this[this.state.corner](coordinates, box);
     this.resize(position, coordinates);
   },
 
   controlsResize: function controlsResize(event) {
-    var box = _react2['default'].findDOMNode(this).parentElement.parentElement.getBoundingClientRect();
+    var box = _reactDOM.findDOMNode(this).parentElement.parentElement.getBoundingClientRect();
     var width = event.target.name === 'width' ? +event.target.value : +event.target.value * this.props.aspectRatio;
     var height = event.target.name === 'height' ? +event.target.value : +event.target.value / this.props.aspectRatio;
     var dimensions = this.preserveAspectRatio(width, height);

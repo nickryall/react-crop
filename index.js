@@ -8,6 +8,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 var _react = require('react');
 
+var _reactDOM = require('react-dom');
+
 var _react2 = _interopRequireDefault(_react);
 
 var _draggableResizableBox = require('./draggable-resizable-box');
@@ -70,13 +72,13 @@ exports['default'] = _react2['default'].createClass({
   onLoad: function onLoad(evt) {
     var _this = this;
 
-    var box = _react2['default'].findDOMNode(this).getBoundingClientRect();
+    var box = _reactDOM.findDOMNode(this).getBoundingClientRect();
     this.setState({
       imageLoaded: true,
       width: box.width,
       height: box.height
     }, function () {
-      var img = _react2['default'].findDOMNode(_this.refs.image);
+      var img = _reactDOM.findDOMNode(_this.refs.image);
       _this.props.onImageLoaded && _this.props.onImageLoaded(img);
     });
   },
@@ -87,8 +89,8 @@ exports['default'] = _react2['default'].createClass({
     return new Promise(function (resolve, reject) {
       var img = new Image();
       img.onload = function () {
-        var canvas = _react2['default'].findDOMNode(_this2.refs.canvas);
-        var img = _react2['default'].findDOMNode(_this2.refs.image);
+        var canvas = _reactDOM.findDOMNode(_this2.refs.canvas);
+        var img = _reactDOM.findDOMNode(_this2.refs.image);
         var ctx = canvas.getContext('2d');
         var xScale = img.naturalWidth / _this2.state.width;
         var yScale = img.naturalHeight / _this2.state.height;
@@ -111,6 +113,20 @@ exports['default'] = _react2['default'].createClass({
     });
   },
 
+  getCrop: function getCrop() {
+    var _this2 = this;
+    var img = _reactDOM.findDOMNode(_this2.refs.image);
+    var xScale = (img.naturalWidth / _this2.state.width);
+    var yScale = (img.naturalHeight / _this2.state.height);
+
+    return {
+      offsetX: (this.state.offset.left * xScale),
+      offsetY: (this.state.offset.top * yScale),
+      width: (this.state.dimensions.width * xScale),
+      height: (this.state.dimensions.height * yScale)
+    };
+  },
+
   onChange: function onChange(offset, dimensions) {
     this.setState({ offset: offset, dimensions: dimensions });
   },
@@ -128,7 +144,9 @@ exports['default'] = _react2['default'].createClass({
         className: 'Cropper-canvas',
         ref: 'canvas',
         width: this.props.width,
-        height: this.props.height }),
+        height: this.props.height
+      }),
+
       _react2['default'].createElement('img', {
         ref: 'image',
         src: this.state.url,

@@ -83,36 +83,6 @@ exports['default'] = _react2['default'].createClass({
     });
   },
 
-  cropImage: function cropImage() {
-    var _this2 = this;
-
-    return new Promise(function (resolve, reject) {
-      var img = new Image();
-      img.onload = function () {
-        var canvas = _reactDOM.findDOMNode(_this2.refs.canvas);
-        var img = _reactDOM.findDOMNode(_this2.refs.image);
-        var ctx = canvas.getContext('2d');
-        var xScale = img.naturalWidth / _this2.state.width;
-        var yScale = img.naturalHeight / _this2.state.height;
-
-        var imageOffsetX = xScale < 1 ? 0 : _this2.state.offset.left * xScale;
-        var imageOffsetY = yScale < 1 ? 0 : _this2.state.offset.top * yScale;
-        var imageWidth = xScale < 1 ? img.naturalWidth : _this2.state.dimensions.width * xScale;
-        var imageHeight = yScale < 1 ? img.naturalHeight : _this2.state.dimensions.height * yScale;
-
-        var canvasOffsetX = xScale < 1 ? Math.floor((_this2.state.dimensions.width - img.naturalWidth) / 2) : 0;
-        var canvasOffsetY = yScale < 1 ? Math.floor((_this2.state.dimensions.height - img.naturalHeight) / 2) : 0;
-        var canvasWidth = xScale < 1 ? img.naturalWidth : _this2.props.width;
-        var canvasHeight = yScale < 1 ? img.naturalHeight : _this2.props.height;
-
-        ctx.clearRect(0, 0, _this2.props.width, _this2.props.height);
-        ctx.drawImage(img, imageOffsetX, imageOffsetY, imageWidth, imageHeight, canvasOffsetX, canvasOffsetY, canvasWidth, canvasHeight);
-        resolve((0, _dataUriToBlob2['default'])(canvas.toDataURL()));
-      };
-      img.src = window.URL.createObjectURL(_this2.props.image);
-    });
-  },
-
   getCrop: function getCrop() {
     var _this2 = this;
     var img = _reactDOM.findDOMNode(_this2.refs.image);
@@ -123,7 +93,9 @@ exports['default'] = _react2['default'].createClass({
       offsetX: (this.state.offset.left * xScale),
       offsetY: (this.state.offset.top * yScale),
       width: (this.state.dimensions.width * xScale),
-      height: (this.state.dimensions.height * yScale)
+      height: (this.state.dimensions.height * yScale),
+      naturalWidth: img.naturalWidth,
+      naturalHeight: img.naturalHeight
     };
   },
 
@@ -140,13 +112,6 @@ exports['default'] = _react2['default'].createClass({
           minWidth: this.props.width,
           minHeight: this.props.height
         } },
-      _react2['default'].createElement('canvas', {
-        className: 'Cropper-canvas',
-        ref: 'canvas',
-        width: this.props.width,
-        height: this.props.height
-      }),
-
       _react2['default'].createElement('img', {
         ref: 'image',
         src: this.state.url,
